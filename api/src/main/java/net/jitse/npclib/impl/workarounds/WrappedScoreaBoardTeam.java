@@ -9,7 +9,7 @@ public class WrappedScoreaBoardTeam extends ScoreboardTeam {
     private String overwrittenName;
 
     public static WrappedScoreaBoardTeam createNil() {
-        return new Gson().fromJson("{}", WrappedScoreaBoardTeam.class);
+        return new WrappedScoreaBoardTeam(null, "tits");
     }
 
     public WrappedScoreaBoardTeam(Scoreboard var0, String var1) {
