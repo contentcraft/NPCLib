@@ -19,6 +19,17 @@ public class EntityPlayerAdapter extends EntityPlayer {
     private byte yRot;
     private byte xRot;
 
+    @Override
+    public String getName() {
+        return overName;
+    }
+
+    public void setOverName(String overName) {
+        this.overName = overName;
+    }
+
+    private String overName;
+
     public static EntityPlayerAdapter createNil() {
         return new Gson().fromJson("{}", EntityPlayerAdapter.class);
     }
