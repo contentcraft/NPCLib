@@ -51,7 +51,7 @@ public class PacketListener extends ChannelDuplexHandler {
     public void channelRead(ChannelHandlerContext c, Object packet) throws Exception {
         if (packet instanceof PacketPlayInUseEntity) {
             PacketPlayInUseEntity p = (PacketPlayInUseEntity) packet;
-
+            handleInteractPacket(player, p);
         }
         super.channelRead(c, packet);
     }
