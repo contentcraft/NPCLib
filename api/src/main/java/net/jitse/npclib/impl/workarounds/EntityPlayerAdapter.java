@@ -5,10 +5,14 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
+import org.objenesis.Objenesis;
+import org.objenesis.ObjenesisStd;
 
 import java.util.UUID;
 
 public class EntityPlayerAdapter extends EntityPlayer {
+
+    private static Objenesis objenesis = new ObjenesisStd();
 
     private int oid;
 
@@ -31,7 +35,7 @@ public class EntityPlayerAdapter extends EntityPlayer {
     private String overName;
 
     public static EntityPlayerAdapter createNil() {
-        return new Gson().fromJson("{}", EntityPlayerAdapter.class);
+        return objenesis.newInstance(EntityPlayerAdapter.class);
     }
 
     public EntityPlayerAdapter(MinecraftServer minecraftserver, WorldServer worldserver, GameProfile gameprofile) {
