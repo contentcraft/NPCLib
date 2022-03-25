@@ -5,12 +5,26 @@ import com.mojang.authlib.GameProfile;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3D;
 import org.objenesis.Objenesis;
 import org.objenesis.ObjenesisStd;
 
+import java.lang.reflect.Field;
 import java.util.UUID;
 
 public class EntityPlayerAdapter extends EntityPlayer {
+
+    private static Field AVField;
+
+    static {
+        try {
+            AVField = Entity.class.getDeclaredField("av");
+            AVField.setAccessible(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
     private static Objenesis objenesis = new ObjenesisStd();
 
@@ -61,7 +75,12 @@ public class EntityPlayerAdapter extends EntityPlayer {
     }
 
     public void updateLocVec(double x, double y, double z) {
-        this.g(x, y, z);
+        try {
+            AVField.set(this, new Vec3D(0, 0, 0));
+        } catch (IllegalAccessException ex) {
+            ex.printStackTrace();
+        }
+        this.setPositionRaw(x, y, z);
     }
 
     public void setLx(double lx) {
