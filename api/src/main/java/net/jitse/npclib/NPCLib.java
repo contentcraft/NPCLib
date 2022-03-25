@@ -55,7 +55,12 @@ public final class NPCLib {
         }
 
         // Boot the according packet listener.
-        new PacketListener().start(this);
+        try {
+            new PacketListener().start(this);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return;
+        }
 
         // Start the bStats metrics system and disable the silly relocate check.
         System.setProperty("bstats.relocatecheck", "false");

@@ -24,12 +24,27 @@ import java.util.UUID;
  */
 public class PacketListener {
 
+    public PacketListener() throws ClassNotFoundException {
+        try {
+            packetPlayInUseEntityClazz = Reflection.getMinecraftClass("PacketPlayInUseEntity");
+            entityIdField = Reflection.getField(packetPlayInUseEntityClazz, "a", int.class);
+            actionField = Reflection.getField(packetPlayInUseEntityClazz, "action", Object.class);
+        } catch (Exception e) {
+            // fallback for 1.17 and up
+            isModern = true;
+            packetPlayInUseEntityClazz = Class.forName("net.minecraft.network.protocol.game.PacketPlayInUseEntity");
+            entityIdField = Reflection.getField(packetPlayInUseEntityClazz, "a", int.class);
+            actionField = Reflection.getField(packetPlayInUseEntityClazz, "b", Object.class);
+        }
+    }
+
     // Classes:
-    private final Class<?> packetPlayInUseEntityClazz = Reflection.getMinecraftClass("PacketPlayInUseEntity");
+    private Class<?> packetPlayInUseEntityClazz;
 
     // Fields:
-    private final Reflection.FieldAccessor<Integer> entityIdField = Reflection.getField(packetPlayInUseEntityClazz, "a", int.class);
-    private final Reflection.FieldAccessor<?> actionField = Reflection.getField(packetPlayInUseEntityClazz, "action", Object.class);
+    private Reflection.FieldAccessor<Integer> entityIdField;
+    private Reflection.FieldAccessor<?> actionField;
+    private boolean isModern = false;
 
     // Prevent players from clicking at very high speeds.
     private final Set<UUID> delay = new HashSet<>();
