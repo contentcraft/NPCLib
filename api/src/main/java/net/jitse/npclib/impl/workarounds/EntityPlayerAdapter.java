@@ -76,11 +76,10 @@ public class EntityPlayerAdapter extends EntityPlayer {
 
     public void updateLocVec(double x, double y, double z) {
         try {
-            AVField.set(this, new Vec3D(0, 0, 0));
+            AVField.set(this, new Vec3D(x, y, z));
         } catch (IllegalAccessException ex) {
             ex.printStackTrace();
         }
-        this.setPositionRaw(x, y, z);
     }
 
     public void setLx(double lx) {
