@@ -18,8 +18,8 @@ import net.minecraft.world.level.EnumGamemode;
  */
 public class PacketPlayOutPlayerInfoWrapper {
 
-    private final Class<?> packetPlayOutPlayerInfoClazz = Reflection.getMinecraftClass("PacketPlayOutPlayerInfo");
-    private final Class<?> playerInfoDataClazz = Reflection.getMinecraftClass("PacketPlayOutPlayerInfo$PlayerInfoData");
+    private final Class<?> packetPlayOutPlayerInfoClazz = PacketPlayOutPlayerInfo.class;
+    private final Class<?> playerInfoDataClazz = PacketPlayOutPlayerInfo.PlayerInfoData.class;
     private final Reflection.ConstructorInvoker playerInfoDataConstructor = Reflection.getConstructor(playerInfoDataClazz,
             packetPlayOutPlayerInfoClazz, GameProfile.class, int.class, EnumGamemode.class, IChatBaseComponent.class);
 
