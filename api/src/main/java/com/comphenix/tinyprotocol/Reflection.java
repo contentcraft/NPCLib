@@ -334,7 +334,6 @@ public final class Reflection {
      * @throws IllegalArgumentException If the class doesn't exist.
      */
     public static Class<?> getMinecraftClass(String name) {
-
         return getCanonicalClass(NMS_PREFIX + "." + name);
     }
 

@@ -29,7 +29,7 @@ public class PacketListener {
             packetPlayInUseEntityClazz = Reflection.getMinecraftClass("PacketPlayInUseEntity");
             entityIdField = Reflection.getField(packetPlayInUseEntityClazz, "a", int.class);
             actionField = Reflection.getField(packetPlayInUseEntityClazz, "action", Object.class);
-        } catch (Exception e) {
+        } catch (Throwable e) {
             // fallback for 1.17 and up
             isModern = true;
             packetPlayInUseEntityClazz = Class.forName("net.minecraft.network.protocol.game.PacketPlayInUseEntity");
