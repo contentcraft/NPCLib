@@ -211,12 +211,6 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         return created;
     }
 
-    public void onJoin(Player player) {
-        getAutoHidden().remove(player.getUniqueId());
-        getShown().remove(player.getUniqueId()); // Don't need to use NPC#hide since the entity is not registered in the NMS server.
-        hasTeamRegistered.remove(player.getUniqueId());
-    }
-
     public void onLogout(Player player) {
         getAutoHidden().remove(player.getUniqueId());
         getShown().remove(player.getUniqueId()); // Don't need to use NPC#hide since the entity is not registered in the NMS server.
