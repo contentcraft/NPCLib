@@ -25,6 +25,7 @@ public class PacketPlayOutNamedEntitySpawnWrapper {
         epa.setLx(location.getX());
         epa.setLy(location.getY());
         epa.setLz(location.getZ());
+        epa.updateLocVec(location.getX(), location.getY(), location.getZ());
         epa.setProfileId(uuid);
 
         PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn = new PacketPlayOutNamedEntitySpawn(epa);

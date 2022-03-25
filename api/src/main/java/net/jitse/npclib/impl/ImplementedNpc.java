@@ -87,9 +87,11 @@ public class ImplementedNpc extends NPCBase {
 
         if (hasTeamRegistered.add(player.getUniqueId()))
             playerConnection.sendPacket(packetPlayOutScoreboardTeamRegister);
+
         playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
         playerConnection.sendPacket(packetPlayOutEntityHeadRotation);
+
         sendMetadataPacket(player);
 
         getHologram(player).show(player);
@@ -142,7 +144,9 @@ public class ImplementedNpc extends NPCBase {
         GameProfile newProfile = new GameProfile(uuid, name);
         newProfile.getProperties().get("textures").clear();
         newProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
-        this.packetPlayOutPlayerInfoAdd = new PacketPlayOutPlayerInfoWrapper().create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.a, newProfile, name);
+        this.packetPlayOutPlayerInfoAdd =
+                new PacketPlayOutPlayerInfoWrapper().create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.a, newProfile, name);
+
         for (Player player : Bukkit.getOnlinePlayers()) {
             PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().b;
             playerConnection.sendPacket(packetPlayOutPlayerInfoRemove);

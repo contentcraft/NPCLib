@@ -36,16 +36,17 @@ public class EntityPlayerAdapter extends EntityPlayer {
         return oid;
     }
 
-    public UUID getProfileId() {
-        return profileId;
+    @Override
+    public GameProfile getProfile() {
+        return new GameProfile(profileId, "Yesmanpi");
     }
 
     public void setProfileId(UUID profileId) {
         this.profileId = profileId;
     }
 
-    public double getLx() {
-        return lx;
+    public void updateLocVec(double x, double y, double z) {
+        this.g(x, y, z);
     }
 
     public void setLx(double lx) {
