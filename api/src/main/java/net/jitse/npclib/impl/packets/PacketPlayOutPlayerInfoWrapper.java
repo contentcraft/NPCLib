@@ -2,16 +2,14 @@
  * Copyright (c) 2018 Jitse Boonstra
  */
 
-package net.jitse.npclib.nms.v1_17_R1.packets;
+package net.jitse.npclib.impl.packets;
 
 import java.util.Collections;
 import java.util.List;
 
-import com.comphenix.tinyprotocol.Reflection;
 import com.mojang.authlib.GameProfile;
-import net.jitse.npclib.nms.v1_17_R1.workarounds.EntityPlayerAdapter;
+import net.jitse.npclib.utilities.Reflection;
 import net.minecraft.network.chat.IChatBaseComponent;
-import net.minecraft.network.protocol.game.PacketPlayInUseEntity;
 import net.minecraft.network.protocol.game.PacketPlayOutPlayerInfo;
 import net.minecraft.world.level.EnumGamemode;
 

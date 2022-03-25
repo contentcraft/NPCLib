@@ -9,6 +9,7 @@ import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.internal.NPCManager;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -25,6 +26,11 @@ public class PlayerListener extends HandleMoveBase implements Listener {
 
     public PlayerListener(NPCLib instance) {
         this.instance = instance;
+    }
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        ((CraftPlayer) event.getPlayer()).getHandle().b.a.k.pipeline().addBefore("packet_handler", "npc_lib", new PacketListener(event.getPlayer()));
     }
 
     @EventHandler

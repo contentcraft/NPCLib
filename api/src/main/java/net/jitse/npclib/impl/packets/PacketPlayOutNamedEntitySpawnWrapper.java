@@ -2,15 +2,14 @@
  * Copyright (c) 2018 Jitse Boonstra
  */
 
-package net.jitse.npclib.nms.v1_17_R1.packets;
+package net.jitse.npclib.impl.packets;
 
 import java.util.UUID;
 
-import net.jitse.npclib.nms.v1_17_R1.workarounds.EntityPlayerAdapter;
+import net.jitse.npclib.impl.workarounds.EntityPlayerAdapter;
+import net.jitse.npclib.utilities.Reflection;
 import net.minecraft.network.protocol.game.PacketPlayOutNamedEntitySpawn;
 import org.bukkit.Location;
-
-import com.comphenix.tinyprotocol.Reflection;
 
 /**
  * @author Jitse Boonstra

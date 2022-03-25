@@ -7,8 +7,8 @@ package net.jitse.npclib;
 import net.jitse.npclib.NPCLibOptions.MovementHandling;
 import net.jitse.npclib.api.NPC;
 import net.jitse.npclib.api.utilities.Logger;
+import net.jitse.npclib.impl.ImplementedNpc;
 import net.jitse.npclib.listeners.*;
-import net.jitse.npclib.metrics.NPCLibMetrics;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,30 +18,12 @@ public final class NPCLib {
 
     private final JavaPlugin plugin;
     private final Logger logger;
-    private final Class<?> npcClass;
 
     private double autoHideDistance = 50.0;
 
     private NPCLib(JavaPlugin plugin, MovementHandling moveHandling) {
         this.plugin = plugin;
         this.logger = new Logger("NPCLib");
-
-        String versionName = plugin.getServer().getClass().getPackage().getName().split("\\.")[3];
-
-        Class<?> npcClass = null;
-
-        try {
-            npcClass = Class.forName("net.jitse.npclib.nms." + versionName + ".NPC_" + versionName);
-        } catch (ClassNotFoundException exception) {
-            // Version not supported, error below.
-        }
-
-        this.npcClass = npcClass;
-
-        if (npcClass == null) {
-            logger.severe("Failed to initiate. Your server's version (" + versionName + ") is not supported");
-            return;
-        }
 
         PluginManager pluginManager = plugin.getServer().getPluginManager();
 
@@ -53,20 +35,6 @@ public final class NPCLib {
         } else {
             pluginManager.registerEvents(new PeriodicMoveListener(this, moveHandling.updateInterval), plugin);
         }
-
-        // Boot the according packet listener.
-        try {
-            new PacketListener().start(this);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return;
-        }
-
-        // Start the bStats metrics system and disable the silly relocate check.
-        System.setProperty("bstats.relocatecheck", "false");
-        new NPCLibMetrics(this);
-
-        logger.info("Enabled for Minecraft " + versionName);
     }
 
     public NPCLib(JavaPlugin plugin) {
@@ -116,7 +84,7 @@ public final class NPCLib {
      */
     public NPC createNPC(List<String> text) {
         try {
-            return (NPC) npcClass.getConstructors()[0].newInstance(this, text);
+            return new ImplementedNpc(this, text);
         } catch (Exception exception) {
             logger.warning("Failed to create NPC. Please report the following stacktrace message", exception);
         }

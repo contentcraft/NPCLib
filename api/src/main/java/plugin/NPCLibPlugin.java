@@ -2,7 +2,7 @@
  * Copyright (c) 2018 Jitse Boonstra
  */
 
-package net.jitse.npclib.plugin;
+package plugin;
 
 import org.bukkit.plugin.java.JavaPlugin;
 

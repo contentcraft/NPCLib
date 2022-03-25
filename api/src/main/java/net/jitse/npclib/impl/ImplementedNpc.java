@@ -1,4 +1,4 @@
-package net.jitse.npclib.nms.v1_17_R1;
+package net.jitse.npclib.impl;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
@@ -10,7 +10,7 @@ import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.internal.MinecraftVersion;
 import net.jitse.npclib.internal.NPCBase;
-import net.jitse.npclib.nms.v1_17_R1.packets.*;
+import net.jitse.npclib.impl.packets.*;
 
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.network.PlayerConnection;
@@ -29,7 +29,7 @@ import java.util.List;
 /**
  * @author Jitse Boonstra
  */
-public class NPC_v1_17_R1 extends NPCBase {
+public class ImplementedNpc extends NPCBase {
 
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
     private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister;
@@ -38,7 +38,7 @@ public class NPC_v1_17_R1 extends NPCBase {
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
     private PacketPlayOutAnimation packetPlayOutAnimation;
 
-    public NPC_v1_17_R1(NPCLib instance, List<String> lines) {
+    public ImplementedNpc(NPCLib instance, List<String> lines) {
         super(instance, lines);
     }
 
@@ -46,7 +46,7 @@ public class NPC_v1_17_R1 extends NPCBase {
     public Hologram getHologram(Player player) {
         Hologram hologram = super.getHologram(player);
         if (hologram == null)
-            hologram = new Hologram(MinecraftVersion.V1_16_R3, location.clone().add(0, 0.5, 0), getText(player));
+            hologram = new Hologram(location.clone().add(0, 0.5, 0), getText(player));
         playerHologram.put(player.getUniqueId(), hologram);
         return hologram;
     }

@@ -4,17 +4,18 @@
 
 package net.jitse.npclib.listeners;
 
-import com.comphenix.tinyprotocol.Reflection;
-import com.comphenix.tinyprotocol.TinyProtocol;
-import net.jitse.npclib.NPCLib;
+import io.netty.channel.ChannelDuplexHandler;
+import io.netty.channel.ChannelHandlerContext;
+import lombok.SneakyThrows;
 import net.jitse.npclib.api.events.NPCInteractEvent;
 import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.internal.NPCManager;
+import net.minecraft.network.protocol.game.PacketPlayInUseEntity;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 
+import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.UUID;
@@ -22,53 +23,43 @@ import java.util.UUID;
 /**
  * @author Jitse Boonstra
  */
-public class PacketListener {
-
-    public PacketListener() throws ClassNotFoundException {
-        try {
-            packetPlayInUseEntityClazz = Reflection.getMinecraftClass("PacketPlayInUseEntity");
-            entityIdField = Reflection.getField(packetPlayInUseEntityClazz, "a", int.class);
-            actionField = Reflection.getField(packetPlayInUseEntityClazz, "action", Object.class);
-        } catch (Throwable e) {
-            // fallback for 1.17 and up
-            isModern = true;
-            packetPlayInUseEntityClazz = Class.forName("net.minecraft.network.protocol.game.PacketPlayInUseEntity");
-            entityIdField = Reflection.getField(packetPlayInUseEntityClazz, "a", int.class);
-            actionField = Reflection.getField(packetPlayInUseEntityClazz, "b", Object.class);
-        }
-    }
-
-    // Classes:
-    private Class<?> packetPlayInUseEntityClazz;
-
-    // Fields:
-    private Reflection.FieldAccessor<Integer> entityIdField;
-    private Reflection.FieldAccessor<?> actionField;
-    private boolean isModern = false;
+public class PacketListener extends ChannelDuplexHandler {
 
     // Prevent players from clicking at very high speeds.
     private final Set<UUID> delay = new HashSet<>();
+    private Player player;
 
-    private Plugin plugin;
+    private static Field idField;
+    private static Field actionField;
 
-    public void start(NPCLib instance) {
-        this.plugin = instance.getPlugin();
-
-        new TinyProtocol(instance) {
-
-            @Override
-            public Object onPacketInAsync(Player player, Object packet) {
-                return handleInteractPacket(player, packet) ? super.onPacketInAsync(player, packet) : null;
-            }
-        };
+    static {
+        try {
+            idField = PacketPlayInUseEntity.class.getDeclaredField("a");
+            idField.setAccessible(true);
+            actionField = PacketPlayInUseEntity.class.getDeclaredField("b");
+            actionField.setAccessible(true);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        }
     }
 
-    private boolean handleInteractPacket(Player player, Object packet) {
-        if (!packetPlayInUseEntityClazz.isInstance(packet) || player == null)
-            return true; // We aren't handling the packet.
+    public PacketListener(Player player) {
+        this.player = player;
+    }
 
+    @Override
+    public void channelRead(ChannelHandlerContext c, Object packet) throws Exception {
+        if (packet instanceof PacketPlayInUseEntity) {
+            PacketPlayInUseEntity p = (PacketPlayInUseEntity) packet;
+
+        }
+        super.channelRead(c, packet);
+    }
+
+    @SneakyThrows
+    private boolean handleInteractPacket(Player player, PacketPlayInUseEntity packet) {
         NPCBase npc = null;
-        int packetEntityId = entityIdField.get(packet);
+        int packetEntityId = (int) idField.get(packet);
 
         // Not using streams here is an intentional choice.
         // Packet listeners is one of the few places where it is important to write optimized code.
@@ -96,8 +87,23 @@ public class PacketListener {
                 ? NPCInteractEvent.ClickType.LEFT_CLICK : NPCInteractEvent.ClickType.RIGHT_CLICK;
 
         delay.add(player.getUniqueId());
-        Bukkit.getScheduler().runTask(plugin, new TaskCallNpcInteractEvent(new NPCInteractEvent(player, clickType, npc), this));
+        Bukkit.getScheduler().runTask(Bukkit.getPluginManager().getPlugins()[0], new TaskCallNpcInteractEvent(new NPCInteractEvent(player, clickType, npc), this));
         return false;
+    }
+
+    @Override
+    public void handlerAdded(ChannelHandlerContext channelHandlerContext) throws Exception {
+
+    }
+
+    @Override
+    public void handlerRemoved(ChannelHandlerContext channelHandlerContext) throws Exception {
+
+    }
+
+    @Override
+    public void exceptionCaught(ChannelHandlerContext channelHandlerContext, Throwable throwable) throws Exception {
+
     }
 
     // This would be a non-static lambda, and its usage matters, so we'll make it a full class.

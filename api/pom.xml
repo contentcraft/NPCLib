@@ -7,8 +7,8 @@
 
     <parent>
         <artifactId>npclib</artifactId>
-        <groupId>net.jitse</groupId>
-        <version>2.12.2-SNAPSHOT</version>
+        <groupId>nl.contentcraft</groupId>
+        <version>hacky-117</version>
     </parent>
 
     <artifactId>npclib-api</artifactId>
@@ -23,6 +23,19 @@
             <url>https://libraries.minecraft.net</url>
         </repository>
     </repositories>
+
+    <build>
+        <resources>
+            <resource>
+                <targetPath>.</targetPath>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+                <includes>
+                    <include>plugin.yml</include>
+                </includes>
+            </resource>
+        </resources>
+    </build>
 
     <dependencies>
         <dependency>

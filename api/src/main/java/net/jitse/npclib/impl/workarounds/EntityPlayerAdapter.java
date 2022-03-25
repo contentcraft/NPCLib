@@ -1,4 +1,4 @@
-package net.jitse.npclib.nms.v1_17_R1.workarounds;
+package net.jitse.npclib.impl.workarounds;
 
 import com.google.gson.Gson;
 import com.mojang.authlib.GameProfile;

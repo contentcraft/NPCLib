@@ -16,6 +16,7 @@ import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.api.state.NPCState;
 import net.jitse.npclib.hologram.Hologram;
 import net.jitse.npclib.utilities.MathUtil;
+import net.minecraft.network.protocol.Packet;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -99,7 +100,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
                 getHologram(player).show(player);
             } else {
                 Hologram hologram = getHologram(player);
-                List<Object> updatePackets = hologram.getUpdatePackets(text);
+                List<Packet> updatePackets = hologram.getUpdatePackets(text);
                 hologram.update(player, updatePackets);
             }
         }

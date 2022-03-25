@@ -1,4 +1,4 @@
-package net.jitse.npclib.nms.v1_17_R1.packets;
+package net.jitse.npclib.impl.packets;
 
 import java.util.Collection;
 

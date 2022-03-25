@@ -2,16 +2,11 @@
  * Copyright (c) 2018 Jitse Boonstra
  */
 
-package net.jitse.npclib.nms.v1_17_R1.packets;
+package net.jitse.npclib.impl.packets;
 
-import java.util.Collection;
-import java.util.Collections;
-
-import com.comphenix.tinyprotocol.Reflection;
 import com.google.gson.Gson;
-import net.jitse.npclib.nms.v1_17_R1.workarounds.WrappedScoreaBoardTeam;
-import net.minecraft.network.chat.ChatComponentText;
-import net.minecraft.network.chat.IChatBaseComponent;
+import net.jitse.npclib.impl.workarounds.WrappedScoreaBoardTeam;
+import net.jitse.npclib.utilities.Reflection;
 import net.minecraft.network.protocol.game.PacketPlayOutScoreboardTeam;
 
 /**

@@ -1,7 +1,7 @@
-package net.jitse.npclib.nms.v1_17_R1.packets;
+package net.jitse.npclib.impl.packets;
 
 import net.jitse.npclib.api.state.NPCAnimation;
-import net.jitse.npclib.nms.v1_17_R1.workarounds.EntityPlayerAdapter;
+import net.jitse.npclib.impl.workarounds.EntityPlayerAdapter;
 import net.minecraft.network.protocol.game.PacketPlayOutAnimation;
 
 public class PacketPlayOutAnimationWrapper {
