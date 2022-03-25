@@ -9,7 +9,16 @@ import com.google.common.collect.MapMaker;
 import com.mojang.authlib.GameProfile;
 import io.netty.channel.*;
 import net.jitse.npclib.NPCLib;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.EntityPlayer;
+import net.minecraft.server.network.PlayerConnection;
+import net.minecraft.server.network.ServerConnection;
+import nl.contentcraft.reflect.reflection.ReflectedField;
+import nl.contentcraft.reflect.reflection.ReflectedMethod;
+import nl.contentcraft.reflect.reflection.ReflectionHelper;
 import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_17_R1.entity.CraftHumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -26,22 +35,22 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Minimized version of TinyProtocol by Kristian suited for NPCLib, modifications and refactoring by Jitse.
+ *
+ * Forked with some extremely hacky code to implement 1.17
  */
 public abstract class TinyProtocol {
+
+    private static final ReflectedMethod<Object> handleMethod = ReflectionHelper.findNamedMethodInClass(CraftHumanEntity.class, "getHandle");
+    private static final ReflectedField<Object> connectionField = ReflectionHelper.findNamedField(EntityPlayer.class, "playerConnection");
+    private static final ReflectedField<Object> managerField = ReflectionHelper.findNamedField(PlayerConnection.class, "networkManager");
+    private static final ReflectedField<Object> channelField = ReflectionHelper.findNamedField(NetworkManager.class, "channel");
+
     private static final AtomicInteger ID = new AtomicInteger(0);
 
-    // Used in order to lookup a channel
-    private static final Reflection.MethodInvoker getPlayerHandle = Reflection.getMethod("{obc}.entity.CraftPlayer", "getHandle");
-    private static final Reflection.FieldAccessor<Object> getConnection = Reflection.getField("{nms}.EntityPlayer", "playerConnection", Object.class);
-    private static final Reflection.FieldAccessor<Object> getManager = Reflection.getField("{nms}.PlayerConnection", "networkManager", Object.class);
-    private static final Reflection.FieldAccessor<Channel> getChannel = Reflection.getField("{nms}.NetworkManager", Channel.class, 0);
-
     // Looking up ServerConnection
-    private static final Class<Object> minecraftServerClass = Reflection.getUntypedClass("{nms}.MinecraftServer");
     private static final Class<Object> serverConnectionClass = Reflection.getUntypedClass("{nms}.ServerConnection");
-    private static final Reflection.FieldAccessor<Object> getMinecraftServer = Reflection.getField("{obc}.CraftServer", minecraftServerClass, 0);
-    private static final Reflection.FieldAccessor<Object> getServerConnection = Reflection.getField(minecraftServerClass, serverConnectionClass, 0);
-    // This depends on the arrangement of fields in the ServerConnection class, check in every new version for updates!
+    private static final Reflection.FieldAccessor<Object> getServerConnection = Reflection.getField(ServerConnection.class, serverConnectionClass, 0);
+
     private static final Reflection.FieldAccessor<List> networkMarkers = Reflection.getField(serverConnectionClass, List.class, 1);
 //    private static final Reflection.MethodInvoker getNetworkMarkers = Reflection.getTypedMethod(serverConnectionClass, null, List.class, serverConnectionClass);
 
@@ -188,8 +197,8 @@ public abstract class TinyProtocol {
 
     @SuppressWarnings("unchecked")
     private void registerChannelHandler() {
-        Object mcServer = getMinecraftServer.get(Bukkit.getServer());
-        Object serverConnection = getServerConnection.get(mcServer);
+        Object mcServer = MinecraftServer.getServer();
+        Object serverConnection = MinecraftServer.getServer().getServerConnection();
         boolean looking = true;
 
         // We need to synchronize against this list
@@ -267,17 +276,9 @@ public abstract class TinyProtocol {
     }
 
     private Channel getChannel(Player player) {
-        Channel channel = channelLookup.get(player.getName());
-
-        // Lookup channel again
-        if (channel == null) {
-            Object connection = getConnection.get(getPlayerHandle.invoke(player));
-            Object manager = getManager.get(connection);
-
-            channelLookup.put(player.getName(), channel = getChannel.get(manager));
-        }
-
-        return channel;
+        if (channelField.getFrom(managerField.getFrom(connectionField.getFrom(handleMethod.callOnWithoutArgs(player)))) == null)
+            throw new NullPointerException("null cannot be cast to non-null type io.netty.channel.Channel");
+        return (Channel) channelField.getFrom(managerField.getFrom(connectionField.getFrom(handleMethod.callOnWithoutArgs(player))));
     }
 
     private void close() {
