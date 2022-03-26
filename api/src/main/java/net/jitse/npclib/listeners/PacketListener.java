@@ -68,8 +68,10 @@ public class PacketListener extends ChannelDuplexHandler {
         // So, we're avoiding them here.
         // ~ Kneesnap, 9 / 20 / 2019.
 
+        System.out.println("Id here " + packet);
         for (NPCBase testNPC : NPCManager.getAllNPCs()) {
-            if (testNPC.isCreated() && testNPC.isShown(player) && testNPC.getEntityId() == packetEntityId) {
+            if (testNPC.isCreated() && testNPC.getEntityId() == packetEntityId) {
+                System.out.println("Found NPC");
                 npc = testNPC;
                 break;
             }
@@ -88,6 +90,7 @@ public class PacketListener extends ChannelDuplexHandler {
                 ? NPCInteractEvent.ClickType.LEFT_CLICK : NPCInteractEvent.ClickType.RIGHT_CLICK;
 
         delay.add(player.getUniqueId());
+        System.out.println("Handling event");
         Bukkit.getScheduler().runTask(Bukkit.getPluginManager().getPlugins()[0], new TaskCallNpcInteractEvent(new NPCInteractEvent(player, clickType, npc), this));
         return false;
     }
