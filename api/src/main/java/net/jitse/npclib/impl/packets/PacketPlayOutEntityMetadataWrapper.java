@@ -14,7 +14,7 @@ public class PacketPlayOutEntityMetadataWrapper {
     public PacketPlayOutEntityMetadata create(Collection<NPCState> activateStates, int entityId) {
         DataWatcher dataWatcher = new DataWatcher(null);
         byte masked = NPCState.getMasked(activateStates);
-        dataWatcher.set(new DataWatcherObject<>(13, DataWatcherRegistry.b), 0xFF);
+        dataWatcher.register(new DataWatcherObject<>(13, DataWatcherRegistry.b), 0xFF);
         dataWatcher.register(new DataWatcherObject<EntityPose>(6, DataWatcherRegistry.s), getMaskedPose(activateStates));
         dataWatcher.register(new DataWatcherObject<>(0, DataWatcherRegistry.a), masked);
         
