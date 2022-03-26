@@ -1,7 +1,7 @@
 package net.jitse.npclib.impl.workarounds;
 
-import com.google.gson.Gson;
 import com.mojang.authlib.GameProfile;
+import lombok.Getter;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.EntityPlayer;
 import net.minecraft.server.level.WorldServer;
@@ -34,8 +34,8 @@ public class EntityPlayerAdapter extends EntityPlayer {
     private double lx;
     private double ly;
     private double lz;
-    private byte yRot;
-    private byte xRot;
+    private float yRot;
+    private float xRot;
 
     @Override
     public String getName() {
@@ -102,19 +102,21 @@ public class EntityPlayerAdapter extends EntityPlayer {
         this.lz = lz;
     }
 
-    public byte getyRot() {
+    @Override
+    public float getYRot() {
         return yRot;
     }
 
-    public void setyRot(byte yRot) {
+    public void setyRot(float yRot) {
         this.yRot = yRot;
     }
 
-    public byte getxRot() {
+    @Override
+    public float getXRot() {
         return xRot;
     }
 
-    public void setxRot(byte xRot) {
+    public void setxRot(float xRot) {
         this.xRot = xRot;
     }
 

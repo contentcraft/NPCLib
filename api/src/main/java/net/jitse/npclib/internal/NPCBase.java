@@ -142,6 +142,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         if (skin != null)
             gameProfile.getProperties().put("textures", new Property("textures", skin.getValue(), skin.getSignature()));
 
+        createPackets();
         return this;
     }
 

@@ -53,12 +53,6 @@ public class ImplementedNpc extends NPCBase {
 
     @Override
     public void createPackets() {
-        Bukkit.getOnlinePlayers().forEach(this::createPackets);
-    }
-
-    @Override
-    public void createPackets(Player player) {
-
         PacketPlayOutPlayerInfoWrapper packetPlayOutPlayerInfoWrapper = new PacketPlayOutPlayerInfoWrapper();
 
         // Packets for spawning the NPC:

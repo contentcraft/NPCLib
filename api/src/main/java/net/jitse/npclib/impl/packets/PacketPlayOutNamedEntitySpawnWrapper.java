@@ -19,8 +19,8 @@ public class PacketPlayOutNamedEntitySpawnWrapper {
     public PacketPlayOutNamedEntitySpawn create(UUID uuid, Location location, int entityId) {
         EntityPlayerAdapter epa = EntityPlayerAdapter.createNil();
         epa.setOid(entityId);
-        epa.setyRot((byte) ((int) (location.getYaw() * 256.0F / 360.0F)));
-        epa.setxRot((byte) ((int) (location.getPitch() * 256.0F / 360.0F)));
+        epa.setyRot(location.getYaw());
+        epa.setxRot(location.getPitch());
 
         epa.setLx(location.getX());
         epa.setLy(location.getY());
