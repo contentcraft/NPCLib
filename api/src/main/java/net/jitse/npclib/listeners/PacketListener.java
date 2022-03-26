@@ -49,6 +49,7 @@ public class PacketListener extends ChannelDuplexHandler {
 
     @Override
     public void channelRead(ChannelHandlerContext c, Object packet) throws Exception {
+        System.out.println(packet.getClass().getSimpleName());
         if (packet instanceof PacketPlayInUseEntity) {
             PacketPlayInUseEntity p = (PacketPlayInUseEntity) packet;
             handleInteractPacket(player, p);
