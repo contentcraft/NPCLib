@@ -8,10 +8,10 @@ import net.jitse.npclib.api.skin.Skin;
 import net.jitse.npclib.api.state.NPCAnimation;
 import net.jitse.npclib.api.state.NPCSlot;
 import net.jitse.npclib.hologram.Hologram;
-import net.jitse.npclib.internal.MinecraftVersion;
 import net.jitse.npclib.internal.NPCBase;
 import net.jitse.npclib.impl.packets.*;
 
+import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.*;
 import net.minecraft.server.network.PlayerConnection;
 import net.minecraft.world.entity.EnumItemSlot;
@@ -32,7 +32,7 @@ import java.util.List;
 public class ImplementedNpc extends NPCBase {
 
     private PacketPlayOutNamedEntitySpawn packetPlayOutNamedEntitySpawn;
-    private PacketPlayOutScoreboardTeam packetPlayOutScoreboardTeamRegister;
+    private Packet[] packetPlayOutScoreboardTeamRegister;
     private PacketPlayOutPlayerInfo packetPlayOutPlayerInfoAdd, packetPlayOutPlayerInfoRemove;
     private PacketPlayOutEntityHeadRotation packetPlayOutEntityHeadRotation;
     private PacketPlayOutEntityDestroy packetPlayOutEntityDestroy;
@@ -57,7 +57,9 @@ public class ImplementedNpc extends NPCBase {
 
         // Packets for spawning the NPC:
         this.packetPlayOutScoreboardTeamRegister = new PacketPlayOutScoreboardTeamWrapper()
-                .createRegisterTeam(name); // First packet to send.
+                .createRegisterTeam(name, name); // First packet to send.
+
+
 
         this.packetPlayOutPlayerInfoAdd = packetPlayOutPlayerInfoWrapper
                 .create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.a, gameProfile, name); // Second packet to send.
@@ -80,7 +82,10 @@ public class ImplementedNpc extends NPCBase {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().b;
 
         if (hasTeamRegistered.add(player.getUniqueId()))
-            playerConnection.sendPacket(packetPlayOutScoreboardTeamRegister);
+            for (Packet packet : packetPlayOutScoreboardTeamRegister) {
+                playerConnection.sendPacket(packet);
+            }
+
 
         playerConnection.sendPacket(packetPlayOutPlayerInfoAdd);
         playerConnection.sendPacket(packetPlayOutNamedEntitySpawn);
