@@ -71,7 +71,7 @@ public class ImplementedNpc extends NPCBase {
                 .create(location, entityId); // Fourth packet to send.
 
         this.packetPlayOutPlayerInfoRemove = packetPlayOutPlayerInfoWrapper
-                .create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.c, gameProfile, name); // Fifth packet to send (delayed).
+                .create(PacketPlayOutPlayerInfo.EnumPlayerInfoAction.e, gameProfile, name); // Fifth packet to send (delayed).
 
         // Packet for destroying the NPC:
         this.packetPlayOutEntityDestroy = new PacketPlayOutEntityDestroy(entityId); // First packet to send.
