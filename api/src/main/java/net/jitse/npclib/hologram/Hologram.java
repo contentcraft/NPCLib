@@ -80,17 +80,18 @@ public class Hologram {
         }
     }
 
-    public List<Packet> getUpdatePackets(List<String> text) {
+    public List<Packet> getUpdatePackets(List<String> newText) {
         List<Packet> updatePackets = new ArrayList<>();
 
-        if (this.text.size() != text.size()) {
+        if (this.text.size() != newText.size()) {
             throw new IllegalArgumentException("When updating the text, the old and new text should have the same amount of lines");
         }
 
-        for (int i = 0; i < text.size(); i++) {
+        for (int i = 0; i < newText.size(); i++) {
             EntityArmorStand entityArmorStand = armorStands.get(i);
             String oldLine = this.text.get(i);
-            String newLine = text.get(i);
+            String newLine = newText.get(i);
+            System.out.println("DEBUG: Updating packet with line: " + newLine);
 
             entityArmorStand.setCustomName(new ChatComponentText(newLine));
             showPackets.set(i, new PacketPlayOutSpawnEntityLiving(entityArmorStand));
@@ -105,7 +106,7 @@ public class Hologram {
             }
         }
 
-        this.text = text;
+        this.text = newText;
 
         return updatePackets;
     }
