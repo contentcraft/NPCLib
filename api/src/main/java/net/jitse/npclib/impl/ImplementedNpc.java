@@ -80,7 +80,6 @@ public class ImplementedNpc extends NPCBase {
     @Override
     public void sendShowPackets(Player player) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().b;
-        getShown().add(player.getUniqueId());
 
         if (hasTeamRegistered.add(player.getUniqueId()))
             for (Packet packet : packetPlayOutScoreboardTeamRegister) {
@@ -99,6 +98,7 @@ public class ImplementedNpc extends NPCBase {
         // Removing the player info after 10 seconds.
         Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () ->
                 playerConnection.sendPacket(packetPlayOutPlayerInfoRemove), 20 * 10);
+
     }
 
     @Override

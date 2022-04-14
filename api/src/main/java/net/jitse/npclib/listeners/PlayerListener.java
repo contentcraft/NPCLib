@@ -35,6 +35,7 @@ public class PlayerListener extends HandleMoveBase implements Listener {
         Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () -> {
             for (NPCBase npc : NPCManager.getAllNPCs()) {
                 npc.sendShowPackets(event.getPlayer());
+                npc.getShown().add(event.getPlayer().getUniqueId());
             }
         }, 20);
     }
