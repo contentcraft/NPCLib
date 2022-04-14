@@ -197,7 +197,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     @Override
     public boolean isShown(Player player) {
         Objects.requireNonNull(player, "Player object cannot be null");
-        return shown.contains(player.getUniqueId()) && !autoHidden.contains(player.getUniqueId());
+        return shown.contains(player.getUniqueId());
     }
 
     @Override
