@@ -80,6 +80,7 @@ public class ImplementedNpc extends NPCBase {
     @Override
     public void sendShowPackets(Player player) {
         PlayerConnection playerConnection = ((CraftPlayer) player).getHandle().b;
+        getShown().add(player.getUniqueId());
 
         if (hasTeamRegistered.add(player.getUniqueId()))
             for (Packet packet : packetPlayOutScoreboardTeamRegister) {
