@@ -91,7 +91,6 @@ public class Hologram {
             EntityArmorStand entityArmorStand = armorStands.get(i);
             String oldLine = this.text.get(i);
             String newLine = newText.get(i);
-            System.out.println("DEBUG: Updating packet with line: " + newLine);
 
             entityArmorStand.setCustomName(new ChatComponentText(newLine));
             showPackets.set(i, new PacketPlayOutSpawnEntityLiving(entityArmorStand));

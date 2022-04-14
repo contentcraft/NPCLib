@@ -98,11 +98,15 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         if (isShown(player)) { // only show hologram if the player is in range
             if (originalText.size() != text.size()) {
                 getHologram(player).show(player);
+                System.out.println("DEBUG: Funny size");
             } else {
+                System.out.println("DEBUG: Yeah no thats good");
                 Hologram hologram = getHologram(player);
                 List<Packet> updatePackets = hologram.getUpdatePackets(text);
                 hologram.update(player, updatePackets);
             }
+        } else {
+            System.out.println("DEBUG: Not shown");
         }
         return this;
     }
@@ -110,7 +114,9 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     @Override
     public NPC setText(List<String> text) {
         this.text = text;
+        System.out.println("DEBUG: Pretty cool");
         for (UUID uuid : shown) {
+            System.out.println("DEBUG: shown is a thing, indeed");
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) continue;
             setText(player, text);
@@ -255,6 +261,8 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             throw new IllegalArgumentException("NPC is already shown to player");
         }
 
+        shown.add(player.getUniqueId());
+
         if (auto) {
             sendShowPackets(player);
             sendMetadataPacket(player);
@@ -263,9 +271,6 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             // NPC is auto-shown now, we can remove the UUID from the set.
             autoHidden.remove(player.getUniqueId());
         } else {
-            // Adding the UUID to the set.
-            shown.add(player.getUniqueId());
-
             if (inRangeOf(player) && inViewOf(player)) {
                 // The player can see the NPC and is in range, send the packets.
                 sendShowPackets(player);
@@ -294,6 +299,8 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             throw new IllegalArgumentException("NPC cannot be hidden from player before calling NPC#show first");
         }
 
+        shown.remove(player.getUniqueId());
+
         if (auto) {
             if (autoHidden.contains(player.getUniqueId())) {
                 throw new IllegalStateException("NPC cannot be auto-hidden twice");
@@ -305,8 +312,6 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             autoHidden.add(player.getUniqueId());
         } else {
             // Removing the UUID from the set.
-            shown.remove(player.getUniqueId());
-
             if (inRangeOf(player)) {
                 // The player is in range of the NPC, send the packets.
                 sendHidePackets(player);
