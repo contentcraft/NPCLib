@@ -44,7 +44,8 @@ public class PlayerListener extends HandleMoveBase implements Listener {
         if (!movedPlayers.contains(event.getPlayer().getUniqueId())) {
             movedPlayers.add(event.getPlayer().getUniqueId());
             for (NPCBase npc : NPCManager.getAllNPCs()) {
-                npc.sendShowPackets(event.getPlayer());
+                System.out.println("Showing NPC");
+                npc.show(event.getPlayer());
             }
         }
     }

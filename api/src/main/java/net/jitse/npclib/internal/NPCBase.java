@@ -299,6 +299,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             throw new IllegalArgumentException("NPC cannot be hidden from player before calling NPC#show first");
         }
 
+        System.out.println("Hiding NPC");
         shown.remove(player.getUniqueId());
 
         if (auto) {
