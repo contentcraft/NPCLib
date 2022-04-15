@@ -18,12 +18,17 @@ import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitRunnable;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.UUID;
+
 /**
  * @author Jitse Boonstra
  */
 public class PlayerListener extends HandleMoveBase implements Listener {
 
     private final NPCLib instance;
+    private Set<UUID> movedPlayers = new HashSet<>();
 
     public PlayerListener(NPCLib instance) {
         this.instance = instance;
@@ -32,18 +37,23 @@ public class PlayerListener extends HandleMoveBase implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent event) {
         ((CraftPlayer) event.getPlayer()).getHandle().b.a.k.pipeline().addBefore("packet_handler", "npc_lib", new PacketListener(event.getPlayer()));
-        Bukkit.getScheduler().runTaskLater(instance.getPlugin(), () -> {
+    }
+
+    @EventHandler
+    public void onMove(PlayerMoveEvent event) {
+        if (!movedPlayers.contains(event.getPlayer().getUniqueId())) {
+            movedPlayers.add(event.getPlayer().getUniqueId());
             for (NPCBase npc : NPCManager.getAllNPCs()) {
                 npc.sendShowPackets(event.getPlayer());
-                npc.getShown().add(event.getPlayer().getUniqueId());
             }
-        }, 20);
+        }
     }
 
     @EventHandler
     public void onPlayerQuit(PlayerQuitEvent event) {
     	for (NPCBase npc : NPCManager.getAllNPCs())
             npc.onLogout(event.getPlayer());
+        movedPlayers.remove(event.getPlayer().getUniqueId());
     }
 
     @EventHandler
