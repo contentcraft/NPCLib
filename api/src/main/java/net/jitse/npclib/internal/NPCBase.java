@@ -98,15 +98,11 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
         if (isShown(player)) { // only show hologram if the player is in range
             if (originalText.size() != text.size()) {
                 getHologram(player).show(player);
-                System.out.println("DEBUG: Funny size");
             } else {
-                System.out.println("DEBUG: Yeah no thats good");
                 Hologram hologram = getHologram(player);
                 List<Packet> updatePackets = hologram.getUpdatePackets(text);
                 hologram.update(player, updatePackets);
             }
-        } else {
-            System.out.println("DEBUG: Not shown");
         }
         return this;
     }
@@ -114,9 +110,7 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
     @Override
     public NPC setText(List<String> text) {
         this.text = text;
-        System.out.println("DEBUG: Pretty cool");
         for (UUID uuid : shown) {
-            System.out.println("DEBUG: shown is a thing, indeed");
             Player player = Bukkit.getPlayer(uuid);
             if (player == null) continue;
             setText(player, text);
@@ -299,7 +293,6 @@ public abstract class NPCBase implements NPC, NPCPacketHandler {
             throw new IllegalArgumentException("NPC cannot be hidden from player before calling NPC#show first");
         }
 
-        System.out.println("Hiding NPC");
         shown.remove(player.getUniqueId());
 
         if (auto) {
